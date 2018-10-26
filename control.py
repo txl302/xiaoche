@@ -1,22 +1,32 @@
 import pygame
-import sys
-from pygame.locals import *
-
-pygame.init()
+import time
+import socket
 
 speed = 0
-move = 0
+s_c = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-while True:
-	for event in pygame.event.get():
-		if event.type == KEYDOWN:
-			print "hh"
-			if event.key == K_UP:
-				move = +1
-				print "fff"
-			elif event.key == K_DOWN:
-				move = -1
-		elif event.type == KEYUP:
-			move = 0
-	speed+=move
-	print speed 
+if __name__ == '__main__': 
+	pygame.init() 
+	screen = pygame.display.set_mode((600,600)) 
+
+	while True: 
+		print speed 
+		s_c.sendto(str(speed), ("192.168.1.143", 9901))
+		
+		for event in pygame.event.get(): 
+			if event.type==pygame.QUIT: 
+				exit() 
+			if event.type == pygame.KEYDOWN: 
+				if event.key == pygame.K_UP: 
+					speed = speed + 1
+				elif event.key == pygame.K_DOWN: 
+					speed = speed - 1
+
+		key_pressed = pygame.key.get_pressed()
+
+		if bool(key_pressed[pygame.K_UP]):
+			speed = speed + 1
+		if bool(key_pressed[pygame.K_DOWN]):
+			speed = speed - 1
+
+		time.sleep(0.03)
